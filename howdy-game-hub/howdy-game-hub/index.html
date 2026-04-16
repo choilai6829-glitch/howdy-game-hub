@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FF6B6B">
+<title>Howdy 課堂遊戲中心 🎉</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#FF6B6B;--red-d:#c94f4f;--orange:#FF9F43;--yellow:#FECA57;--yellow-d:#c9960a;
+  --green:#1DD1A1;--green-d:#12a57e;--blue:#54A0FF;--blue-d:#2d7dd2;
+  --purple:#A29BFE;--pink:#FD79A8;--bg:#FFF9F0;--card:#FFFFFF;
+  --text:#2D3436;--muted:#636E72;
+  --shadow:0 6px 0 rgba(0,0,0,.12);--shadow-sm:0 3px 0 rgba(0,0,0,.10);--r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── HUB BG ── */
+#page-hub{min-height:100vh;background:radial-gradient(circle at 10% 15%,rgba(255,107,107,.12) 0%,transparent 40%),radial-gradient(circle at 85% 10%,rgba(84,160,255,.12) 0%,transparent 35%),radial-gradient(circle at 5% 80%,rgba(29,209,161,.10) 0%,transparent 35%),radial-gradient(circle at 90% 85%,rgba(162,155,254,.12) 0%,transparent 35%),var(--bg);}
+.floats{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.float{position:absolute;border-radius:50%;opacity:.18;animation:floatUp linear infinite;}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg)}100%{transform:translateY(-110vh) rotate(360deg)}}
+#page-hub>*:not(.floats){position:relative;z-index:1;}
+
+/* ── HUB HEADER ── */
+.hub-header{text-align:center;padding:2.5rem 1rem 1.5rem;}
+.hub-badge{display:inline-block;background:var(--yellow);color:#7C5800;font-size:12px;font-weight:800;padding:4px 16px;border-radius:99px;margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase;box-shadow:var(--shadow-sm);}
+.hub-header h1{font-family:'Fredoka One',cursive;font-size:clamp(2rem,7vw,3.5rem);line-height:1.1;color:var(--text);}
+.hub-header h1 span{color:var(--red);}
+.hub-header p{font-size:15px;color:var(--muted);margin-top:8px;font-weight:600;}
+.stars{font-size:22px;letter-spacing:4px;margin-top:6px;animation:twinkle 2s ease-in-out infinite alternate;}
+@keyframes twinkle{from{opacity:.7;transform:scale(.95)}to{opacity:1;transform:scale(1.05)}}
+
+/* ── TABS ── */
+.tabs-wrap{display:flex;justify-content:center;gap:12px;padding:0 1rem 1.5rem;flex-wrap:wrap;}
+.tab-btn{font-family:'Fredoka One',cursive;font-size:18px;padding:10px 28px;border-radius:99px;border:none;cursor:pointer;background:var(--card);color:var(--muted);box-shadow:var(--shadow-sm);transition:all .18s cubic-bezier(.34,1.56,.64,1);}
+.tab-btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 rgba(0,0,0,.12);}
+.tab-btn.active{background:var(--red);color:#fff;box-shadow:0 6px 0 rgba(199,60,60,.5);transform:translateY(-1px);}
+.tab-btn.active.t-howdy{background:var(--blue);box-shadow:0 6px 0 rgba(40,100,199,.4);}
+
+/* ── BOOK GRID ── */
+.section-label{font-family:'Fredoka One',cursive;font-size:16px;color:var(--muted);text-align:center;margin-bottom:14px;}
+.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:0 1.2rem 1.5rem;max-width:860px;margin:0 auto;}
+.book-card{background:var(--card);border-radius:var(--r);padding:1.2rem 1rem;cursor:pointer;box-shadow:var(--shadow);border-bottom:4px solid rgba(0,0,0,.08);transition:all .18s cubic-bezier(.34,1.56,.64,1);text-align:center;position:relative;overflow:hidden;}
+.book-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent,var(--purple));border-radius:var(--r) var(--r) 0 0;}
+.book-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 12px 0 rgba(0,0,0,.12);}
+.book-card.selected{background:var(--accent,var(--purple));transform:translateY(-3px);box-shadow:0 10px 0 rgba(0,0,0,.15);}
+.book-card.selected .book-name{color:#fff;}
+.book-emoji{font-size:32px;margin-bottom:8px;display:block;}
+.book-name{font-family:'Fredoka One',cursive;font-size:16px;color:var(--text);}
+
+/* ── LESSONS ── */
+.lesson-section{display:none;max-width:860px;margin:0 auto;padding:0 1.2rem 2rem;}
+.lesson-section.visible{display:block;}
+.lesson-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.back-btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;background:var(--card);border:none;cursor:pointer;padding:7px 14px;border-radius:99px;color:var(--muted);box-shadow:var(--shadow-sm);transition:all .15s;}
+.back-btn:hover{background:var(--text);color:#fff;}
+.lesson-book-tag{font-family:'Fredoka One',cursive;font-size:15px;color:#fff;padding:5px 16px;border-radius:99px;box-shadow:var(--shadow-sm);}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;}
+.lesson-btn{background:var(--card);border:none;border-radius:16px;padding:14px 8px;cursor:pointer;text-align:center;font-family:'Nunito',sans-serif;box-shadow:var(--shadow-sm);border-bottom:3px solid rgba(0,0,0,.08);transition:all .18s cubic-bezier(.34,1.56,.64,1);position:relative;}
+.lesson-btn:hover{transform:translateY(-4px);box-shadow:0 8px 0 rgba(0,0,0,.12);}
+.lesson-btn .l-num{font-family:'Fredoka One',cursive;font-size:26px;color:var(--accent,var(--purple));display:block;line-height:1;}
+.lesson-btn .l-label{font-size:11px;font-weight:700;color:var(--muted);display:block;margin-top:4px;}
+.lesson-btn.has-game{border-bottom-color:var(--green);}
+.lesson-btn.has-game .l-num{color:var(--green);}
+.lesson-btn.special .l-num{font-size:16px;color:var(--orange);}
+.lesson-btn.special.has-game .l-num{color:var(--green);}
+.game-badge{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 2px #fff;}
+.no-badge{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#DFE6E9;box-shadow:0 0 0 2px #fff;}
+.hub-footer{text-align:center;padding:1.5rem;font-size:12px;color:var(--muted);font-weight:700;}
+@media(max-width:480px){.book-grid{grid-template-columns:repeat(2,1fr);}.lesson-grid{grid-template-columns:repeat(3,1fr);}}
+
+/* ══════════════════════════════════
+   GAME PAGE
+══════════════════════════════════ */
+#page-game{background:var(--bg);min-height:100vh;}
+#game-topbar{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border-bottom:3px solid rgba(0,0,0,.06);position:sticky;top:0;z-index:200;}
+.topbar-back{font-family:'Fredoka One',cursive;font-size:14px;background:var(--yellow);border:none;cursor:pointer;padding:7px 16px;border-radius:99px;box-shadow:0 3px 0 rgba(180,140,0,.4);transition:all .15s;white-space:nowrap;color:var(--text);}
+.topbar-back:hover{transform:translateY(-1px);}
+.topbar-info{flex:1;}
+.tb-book{font-size:12px;font-weight:700;color:var(--muted);}
+.tb-lesson{font-family:'Fredoka One',cursive;font-size:16px;color:var(--text);line-height:1.1;}
+
+/* score bar */
+#scorebar{display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:12px 20px;border-bottom:4px solid rgba(0,0,0,.07);gap:10px;}
+.team-score{display:flex;flex-direction:column;align-items:center;border-radius:18px;padding:10px 22px;min-width:130px;}
+.team-score.a{background:var(--red);box-shadow:0 6px 0 var(--red-d);}
+.team-score.b{background:var(--blue);box-shadow:0 6px 0 var(--blue-d);}
+.team-label{font-family:'Fredoka One',cursive;font-size:16px;color:#fff;letter-spacing:.05em;}
+.team-pts{font-family:'Fredoka One',cursive;font-size:52px;color:#fff;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.15);}
+.score-btns{display:flex;gap:6px;margin-top:5px;}
+.sc-btn{font-family:'Fredoka One',cursive;font-size:18px;border:none;border-radius:10px;cursor:pointer;padding:4px 14px;color:#fff;background:rgba(0,0,0,.22);transition:all .12s;line-height:1.3;}
+.sc-btn:hover{background:rgba(0,0,0,.38);transform:scale(1.08);}
+.sc-btn:active{transform:scale(.95);}
+.bar-center{flex:1;text-align:center;}
+.unit-tag{font-family:'Fredoka One',cursive;font-size:13px;color:var(--muted);}
+.game-indicator{display:flex;gap:8px;justify-content:center;margin-top:5px;}
+.gi-dot{width:12px;height:12px;border-radius:50%;background:#DFE6E9;transition:all .2s;cursor:pointer;}
+.gi-dot.active{background:var(--orange);transform:scale(1.4);}
+.gi-dot.done{background:var(--green);}
+
+/* screens */
+.screen{display:none;padding:1.2rem;max-width:900px;margin:0 auto;}
+.screen.active{display:block;}
+
+/* game menu */
+.menu-header{text-align:center;padding:1.5rem 0 1rem;}
+.menu-header h1{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,6vw,2.8rem);color:var(--text);}
+.menu-header h1 span{color:var(--orange);}
+.menu-header p{color:var(--muted);font-weight:700;font-size:14px;margin-top:6px;}
+.game-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:1.5rem;}
+.game-card{background:var(--card);border-radius:var(--r);padding:1.5rem 1.2rem;text-align:center;cursor:pointer;box-shadow:var(--shadow);border-bottom:4px solid var(--gc,#ddd);transition:all .18s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;}
+.game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--gc,#ddd);}
+.game-card:hover{transform:translateY(-5px);box-shadow:0 12px 0 rgba(0,0,0,.13);}
+.gc-emoji{font-size:48px;margin-bottom:10px;display:block;}
+.gc-num{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);letter-spacing:.08em;}
+.gc-title{font-family:'Fredoka One',cursive;font-size:20px;color:var(--text);margin:4px 0;}
+.gc-desc{font-size:13px;color:var(--muted);font-weight:600;line-height:1.5;}
+.gc-pattern{color:#fff;border-radius:8px;font-size:12px;font-weight:800;padding:4px 12px;display:inline-block;margin-top:10px;background:var(--gc,#ddd);}
+
+/* shared game ui */
+.game-header-bar{display:flex;align-items:center;gap:10px;margin-bottom:1.2rem;flex-wrap:wrap;}
+.back-to-menu{font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;background:var(--card);border:none;cursor:pointer;padding:7px 14px;border-radius:99px;color:var(--muted);box-shadow:var(--shadow-sm);transition:all .15s;}
+.back-to-menu:hover{background:var(--text);color:#fff;}
+.game-title-chip{font-family:'Fredoka One',cursive;font-size:15px;color:#fff;padding:5px 16px;border-radius:99px;box-shadow:var(--shadow-sm);}
+.round-badge{display:inline-block;background:var(--yellow);color:#7C5800;font-family:'Fredoka One',cursive;font-size:13px;padding:3px 14px;border-radius:99px;box-shadow:var(--shadow-sm);}
+.progress-bar-wrap{background:#E0E0E0;border-radius:99px;height:8px;margin-bottom:1rem;overflow:hidden;}
+.progress-bar{height:8px;background:var(--orange);border-radius:99px;transition:width .4s ease;}
+.question-box{background:var(--card);border-radius:var(--r);padding:1.4rem 1.2rem;box-shadow:var(--shadow);margin-bottom:1rem;text-align:center;border-top:5px solid var(--qc,var(--orange));}
+.q-label{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.q-emoji{font-size:72px;line-height:1;margin:8px 0;display:block;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+.q-text{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,4vw,1.9rem);color:var(--text);line-height:1.3;margin:8px 0;}
+.q-sub{font-size:14px;color:var(--muted);font-weight:700;}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.answer-reveal{background:var(--green);border-radius:var(--r);padding:1rem 1.2rem;text-align:center;margin-bottom:1rem;animation:slideDown .3s ease;display:none;}
+.answer-reveal.show{display:block;}
+@keyframes slideDown{from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.ans-label{font-size:12px;font-weight:800;color:rgba(255,255,255,.8);letter-spacing:.08em;}
+.ans-text{font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,3.5vw,1.6rem);color:#fff;margin-top:4px;}
+.action-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;}
+.btn{font-family:'Fredoka One',cursive;font-size:16px;border:none;border-radius:99px;cursor:pointer;padding:11px 24px;box-shadow:var(--shadow-sm);transition:all .18s cubic-bezier(.34,1.56,.64,1);letter-spacing:.02em;color:#fff;}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(1px);box-shadow:none;}
+.btn-next{background:var(--green);box-shadow:0 4px 0 var(--green-d);}
+.btn-reset{background:var(--muted);box-shadow:0 4px 0 #444;}
+.btn-play{background:var(--purple);box-shadow:0 4px 0 #7c72d4;}
+
+/* game 1 */
+.options-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:1rem;}
+.opt-btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;background:var(--card);border:2.5px solid #E0E0E0;border-radius:14px;padding:12px 8px;cursor:pointer;text-align:center;box-shadow:var(--shadow-sm);transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.opt-btn:hover{border-color:var(--blue);background:#EBF4FF;transform:translateY(-2px);}
+.opt-btn.correct{border-color:var(--green);background:#E8FAF5;animation:correctPop .3s ease;}
+.opt-btn.wrong{border-color:var(--red);background:#FFF0F0;animation:shake .3s ease;}
+@keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.opt-emoji{font-size:20px;}
+
+/* game 2 */
+.mime-card{background:var(--card);border-radius:var(--r);padding:1.8rem 1.2rem;box-shadow:var(--shadow);text-align:center;margin-bottom:1rem;border-top:5px solid var(--purple);}
+.mime-hint-label{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+.mime-hint{font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,4vw,1.6rem);color:var(--text);background:var(--bg);border-radius:12px;padding:.8rem 1.2rem;display:inline-block;margin-bottom:8px;line-height:1.4;}
+.mime-animal{font-size:72px;transition:filter .4s;cursor:pointer;display:block;margin:8px auto;filter:blur(14px);}
+.mime-animal.revealed{filter:blur(0);}
+.mime-ans-full{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--purple);display:none;margin-top:6px;}
+.mime-ans-full.show{display:block;}
+
+/* game 3 */
+.tf-sentence{background:var(--card);border-radius:var(--r);padding:1.4rem 1.2rem;box-shadow:var(--shadow);text-align:center;margin-bottom:1rem;border-top:5px solid var(--blue);}
+.tf-scene-emoji{font-size:56px;margin:10px 0;display:block;}
+.tf-btn-row{display:flex;gap:12px;justify-content:center;margin-bottom:1rem;}
+.tf-btn{font-family:'Fredoka One',cursive;font-size:20px;border:none;border-radius:14px;cursor:pointer;padding:14px 32px;box-shadow:var(--shadow);transition:all .18s cubic-bezier(.34,1.56,.64,1);color:#fff;flex:1;max-width:180px;}
+.tf-btn.true-btn{background:var(--green);box-shadow:0 5px 0 var(--green-d);}
+.tf-btn.false-btn{background:var(--red);box-shadow:0 5px 0 var(--red-d);}
+.tf-btn:hover{transform:translateY(-3px);}
+.tf-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.tf-result{font-family:'Fredoka One',cursive;font-size:22px;text-align:center;padding:.8rem;border-radius:14px;margin-bottom:1rem;display:none;animation:popIn .3s ease;}
+.tf-result.correct{background:var(--green);color:#fff;display:block;}
+.tf-result.wrong{background:var(--red);color:#fff;display:block;}
+
+/* review */
+.review-section{background:var(--card);border-radius:var(--r);padding:1.2rem 1.2rem 1.4rem;box-shadow:var(--shadow);margin-bottom:1rem;}
+.review-sec-title{font-family:'Fredoka One',cursive;font-size:17px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #EEE;}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:8px;}
+.vocab-card{background:var(--bg);border-radius:12px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.vc-e{font-size:26px;line-height:1;}.vc-w{font-family:'Fredoka One',cursive;font-size:13px;color:var(--text);}
+.pattern-table{border-radius:12px;overflow:hidden;border:1.5px solid #EEE;}
+.pt-row{display:grid;grid-template-columns:1.2fr 1fr .8fr 1.2fr;border-bottom:1.5px solid #EEE;}
+.pt-row:last-child{border-bottom:none;}
+.pt-row.header .pt-cell{background:#F8F9FA;font-size:11px;font-weight:800;text-transform:uppercase;color:var(--muted);padding:8px 10px;}
+.pt-cell{padding:10px;font-size:14px;font-weight:700;border-right:1.5px solid #EEE;line-height:1.5;}
+.pt-cell:last-child{border-right:none;}
+.pt-cell.q{background:#FFF9F0;color:var(--orange);}
+.pt-cell.mid{background:#F0F8FF;text-align:center;}
+.pt-cell.a{background:#F0FFF8;color:var(--green-d);}
+.pt-blank{background:var(--orange);color:#fff;border-radius:4px;padding:0 6px;font-size:12px;}
+.grammar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:10px;}
+.grammar-card{background:var(--bg);border-radius:12px;padding:10px 12px;text-align:center;display:flex;flex-direction:column;gap:4px;}
+.gr-rule{font-family:'Fredoka One',cursive;font-size:13px;color:var(--purple);}
+.gr-ex{font-size:13px;font-weight:800;color:var(--text);}
+.plural-row{display:flex;gap:8px;flex-wrap:wrap;}
+.plural-chip{background:var(--yellow);color:#7C5800;font-weight:800;font-size:13px;padding:5px 14px;border-radius:99px;}
+.example-list{display:flex;flex-direction:column;gap:8px;}
+.ex-item{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;line-height:1.4;}
+.ex-emoji{font-size:24px;flex-shrink:0;}
+
+/* placeholder */
+.game-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 1.5rem;text-align:center;gap:12px;}
+.big-emoji{font-size:72px;animation:bounce 1.5s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.game-placeholder h2{font-family:'Fredoka One',cursive;font-size:22px;}
+.game-placeholder p{font-size:14px;color:var(--muted);font-weight:600;line-height:1.6;}
+.key-chip{background:var(--card);border-radius:10px;padding:8px 18px;font-family:monospace;font-size:13px;color:var(--purple);box-shadow:var(--shadow-sm);}
+
+@media(max-width:500px){.team-score{min-width:100px;padding:8px 12px;}.team-pts{font-size:40px;}.sc-btn{font-size:16px;padding:3px 10px;}}
+</style>
+</head>
+<body>
+
+<div class="floats" id="floats"></div>
+
+<!-- ══════════ PAGE: HUB ══════════ -->
+<div class="page active" id="page-hub">
+  <header class="hub-header">
+    <div class="hub-badge">🏫 英文課堂遊戲中心</div>
+    <h1>Howdy <span>Game</span> Hub!</h1>
+    <p>選擇你的課本，開始今天的遊戲吧！</p>
+    <div class="stars">⭐ ⭐ ⭐</div>
+  </header>
+  <div class="tabs-wrap">
+    <button class="tab-btn active" onclick="selectSeries('kids')">⭐ Howdy Kids</button>
+    <button class="tab-btn t-howdy" onclick="selectSeries('howdy')">📘 Howdy</button>
+  </div>
+  <div class="section-label" id="section-label">選擇你的課本 👇</div>
+  <div class="book-grid" id="book-grid"></div>
+  <div class="lesson-section" id="lesson-section">
+    <div class="lesson-header">
+      <button class="back-btn" onclick="clearBook()">← 換一本</button>
+      <span class="lesson-book-tag" id="lesson-book-tag"></span>
+    </div>
+    <div class="lesson-grid" id="lesson-grid"></div>
+  </div>
+  <footer class="hub-footer">🌟 Maggie's Classroom · Howdy Game Hub</footer>
+</div>
+
+<!-- ══════════ PAGE: GAME ══════════ -->
+<div class="page" id="page-game">
+
+  <div id="game-topbar">
+    <button class="topbar-back" onclick="closeGame()">← 返回</button>
+    <div class="topbar-info">
+      <div class="tb-book" id="tb-book"></div>
+      <div class="tb-lesson" id="tb-lesson"></div>
+    </div>
+  </div>
+
+  <div id="scorebar">
+    <div class="team-score a">
+      <div class="team-label">Team A</div>
+      <div class="team-pts" id="score-a">0</div>
+      <div class="score-btns">
+        <button class="sc-btn" onclick="addScore('a',1)">+1</button>
+        <button class="sc-btn" onclick="addScore('a',-1)">−1</button>
+      </div>
+    </div>
+    <div class="bar-center">
+      <div class="unit-tag" id="unit-tag-label">Howdy 5 · Unit 1</div>
+      <div class="game-indicator">
+        <div class="gi-dot active" id="dot0" onclick="gameGoMenu()"></div>
+        <div class="gi-dot" id="dot1"></div>
+        <div class="gi-dot" id="dot2"></div>
+        <div class="gi-dot" id="dot3"></div>
+      </div>
+    </div>
+    <div class="team-score b">
+      <div class="team-label">Team B</div>
+      <div class="team-pts" id="score-b">0</div>
+      <div class="score-btns">
+        <button class="sc-btn" onclick="addScore('b',1)">+1</button>
+        <button class="sc-btn" onclick="addScore('b',-1)">−1</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- game menu screen -->
+  <div class="screen active" id="screen-menu">
+    <div class="menu-header">
+      <h1>Unit 1 · <span>Farm Animals</span> 🐄</h1>
+      <p>選擇今天要玩的遊戲！Choose a game to start!</p>
+    </div>
+    <div class="game-cards">
+      <div class="game-card" style="--gc:#1DD1A1;grid-column:1/-1" onclick="showScreen('review');setDot(0)">
+        <span class="gc-emoji">📖</span>
+        <div class="gc-num">REVIEW</div><div class="gc-title">完整內容總覽</div>
+        <div class="gc-desc">句型、單字、語法一次全部看！</div>
+        <span class="gc-pattern" style="background:#1DD1A1">Unit 1 Full Review</span>
+      </div>
+      <div class="game-card" style="--gc:#FF9F43" onclick="startGame(1)">
+        <span class="gc-emoji">🐄</span>
+        <div class="gc-num">GAME 1</div><div class="gc-title">What Is Doing?</div>
+        <div class="gc-desc">看圖選出正確的句子，考驗觀察力！</div>
+        <span class="gc-pattern">What is/are ___ doing?</span>
+      </div>
+      <div class="game-card" style="--gc:#A29BFE" onclick="startGame(2)">
+        <span class="gc-emoji">🎭</span>
+        <div class="gc-num">GAME 2</div><div class="gc-title">Mime &amp; Guess!</div>
+        <div class="gc-desc">看動作提示猜動物，兩隊搶答！</div>
+        <span class="gc-pattern">He / She / It is ___ing.</span>
+      </div>
+      <div class="game-card" style="--gc:#54A0FF" onclick="startGame(3)">
+        <span class="gc-emoji">✅</span>
+        <div class="gc-num">GAME 3</div><div class="gc-title">True or False?</div>
+        <div class="gc-desc">判斷句子是否正確，快速搶答！</div>
+        <span class="gc-pattern">Can you see / hear the ___?</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- review screen -->
+  <div class="screen" id="screen-review">
+    <div class="game-header-bar">
+      <button class="back-to-menu" onclick="gameGoMenu()">← 返回</button>
+      <span class="game-title-chip" style="background:#1DD1A1">📖 Unit 1 · 完整內容</span>
+    </div>
+    <div class="review-section">
+      <div class="review-sec-title">🐾 Vocabulary · 單字</div>
+      <div class="vocab-grid">
+        <div class="vocab-card"><span class="vc-e">🏡</span><span class="vc-w">farm</span></div>
+        <div class="vocab-card"><span class="vc-e">🐷</span><span class="vc-w">pig</span></div>
+        <div class="vocab-card"><span class="vc-e">🐐</span><span class="vc-w">goat</span></div>
+        <div class="vocab-card"><span class="vc-e">🐴</span><span class="vc-w">horse</span></div>
+        <div class="vocab-card"><span class="vc-e">🐄</span><span class="vc-w">cow</span></div>
+        <div class="vocab-card"><span class="vc-e">🐭</span><span class="vc-w">mouse</span></div>
+        <div class="vocab-card"><span class="vc-e">🐔</span><span class="vc-w">chicken</span></div>
+        <div class="vocab-card"><span class="vc-e">🦆</span><span class="vc-w">duck</span></div>
+        <div class="vocab-card"><span class="vc-e">🐑</span><span class="vc-w">sheep</span></div>
+        <div class="vocab-card"><span class="vc-e">🐝</span><span class="vc-w">bee</span></div>
+        <div class="vocab-card"><span class="vc-e">🦟</span><span class="vc-w">mosquito</span></div>
+        <div class="vocab-card"><span class="vc-e">💧</span><span class="vc-w">pond</span></div>
+        <div class="vocab-card"><span class="vc-e">🌿</span><span class="vc-w">grass</span></div>
+        <div class="vocab-card"><span class="vc-e">🌾</span><span class="vc-w">field</span></div>
+        <div class="vocab-card"><span class="vc-e">🪵</span><span class="vc-w">fence</span></div>
+        <div class="vocab-card"><span class="vc-e">🌸</span><span class="vc-w">beautiful</span></div>
+      </div>
+    </div>
+    <div class="review-section">
+      <div class="review-sec-title">💬 Sentence Pattern 1</div>
+      <div class="pattern-table">
+        <div class="pt-row header"><div class="pt-cell">Question</div><div class="pt-cell">Subject</div><div class="pt-cell">Verb</div><div class="pt-cell">Answer</div></div>
+        <div class="pt-row">
+          <div class="pt-cell q">What is<br><span class="pt-blank">___</span> doing?</div>
+          <div class="pt-cell">the dog<br>Grandpa</div>
+          <div class="pt-cell mid">It / He<br><strong>is</strong></div>
+          <div class="pt-cell a">sleeping.<br>feeding the pig.<br>drinking milk.</div>
+        </div>
+        <div class="pt-row">
+          <div class="pt-cell q">What are<br><span class="pt-blank">___</span> doing?</div>
+          <div class="pt-cell">Tim and Sam<br>Lynn and Grace</div>
+          <div class="pt-cell mid">They<br><strong>are</strong></div>
+          <div class="pt-cell a">watching the cows.</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-section">
+      <div class="review-sec-title">📝 Grammar · -ing spelling</div>
+      <div class="grammar-grid">
+        <div class="grammar-card"><span class="gr-rule">verb + ing</span><span class="gr-ex">eat → eating</span></div>
+        <div class="grammar-card"><span class="gr-rule">drop -e + ing</span><span class="gr-ex">ride → riding</span></div>
+        <div class="grammar-card"><span class="gr-rule">double + ing</span><span class="gr-ex">run → running</span></div>
+      </div>
+      <div class="plural-row">
+        <div class="plural-chip">1 sheep → 2 sheep</div>
+        <div class="plural-chip">1 mouse → 2 mice</div>
+      </div>
+    </div>
+    <div class="review-section">
+      <div class="review-sec-title">💬 Sentence Pattern 2</div>
+      <div class="pattern-table">
+        <div class="pt-row header" style="grid-template-columns:1.2fr 1fr 1.2fr"><div class="pt-cell">Question</div><div class="pt-cell">Answer</div><div class="pt-cell">Follow-up</div></div>
+        <div class="pt-row" style="grid-template-columns:1.2fr 1fr 1.2fr">
+          <div class="pt-cell q">Can you <strong>see</strong> the horse?<br>Can you <strong>hear</strong> the birds?</div>
+          <div class="pt-cell mid">Yes, I can.</div>
+          <div class="pt-cell a">It is <strong>running.</strong><br>They are <strong>singing.</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="review-section">
+      <div class="review-sec-title">✏️ Example Sentences</div>
+      <div class="example-list">
+        <div class="ex-item"><span class="ex-emoji">🐄</span><span>What is the cow doing? → It is <strong>drinking milk</strong>.</span></div>
+        <div class="ex-item"><span class="ex-emoji">🐴🐴</span><span>What are the horses doing? → They are <strong>running</strong>.</span></div>
+        <div class="ex-item"><span class="ex-emoji">🐝</span><span>Can you see the bee? → Yes, I can. It is <strong>flying</strong>.</span></div>
+        <div class="ex-item"><span class="ex-emoji">🦆💦</span><span>Can you hear the ducks? → Yes, I can. They are <strong>swimming</strong>.</span></div>
+        <div class="ex-item"><span class="ex-emoji">🐷</span><span>What is the pig doing? → It is <strong>eating</strong>.</span></div>
+        <div class="ex-item"><span class="ex-emoji">🐑🌿</span><span>What are the sheep doing? → They are <strong>eating grass</strong>.</span></div>
+      </div>
+    </div>
+    <div class="action-row" style="margin-top:1.5rem">
+      <button class="btn btn-next" onclick="startGame(1)">開始 Game 1 →</button>
+      <button class="btn btn-play" onclick="startGame(2)">開始 Game 2 →</button>
+      <button class="btn" style="background:var(--blue);box-shadow:0 4px 0 var(--blue-d)" onclick="startGame(3)">開始 Game 3 →</button>
+    </div>
+  </div>
+
+  <!-- game 1 screen -->
+  <div class="screen" id="screen-g1">
+    <div class="game-header-bar">
+      <button class="back-to-menu" onclick="gameGoMenu()">← 返回</button>
+      <span class="game-title-chip" style="background:#FF9F43">🐄 Game 1 · What Is Doing?</span>
+      <span class="round-badge" id="g1-round">1 / 8</span>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="g1-progress" style="width:12.5%"></div></div>
+    <div class="question-box" style="--qc:#FF9F43">
+      <div class="q-label">看圖回答 Look at the picture!</div>
+      <span class="q-emoji" id="g1-emoji">🐄</span>
+      <div class="q-text" id="g1-question">What is the cow doing?</div>
+    </div>
+    <div class="options-grid" id="g1-options"></div>
+    <div class="answer-reveal" id="g1-answer"><div class="ans-label">✓ Answer</div><div class="ans-text" id="g1-ans-text"></div></div>
+    <div class="action-row">
+      <button class="btn btn-next" onclick="g1Next()">下一題 →</button>
+      <button class="btn btn-reset" onclick="startGame(1)">重新開始</button>
+    </div>
+  </div>
+
+  <!-- game 2 screen -->
+  <div class="screen" id="screen-g2">
+    <div class="game-header-bar">
+      <button class="back-to-menu" onclick="gameGoMenu()">← 返回</button>
+      <span class="game-title-chip" style="background:#A29BFE">🎭 Game 2 · Mime &amp; Guess!</span>
+      <span class="round-badge" id="g2-round">1 / 10</span>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="g2-progress" style="width:10%"></div></div>
+    <div class="mime-card">
+      <div class="mime-hint-label">老師示範這個動作 👇 Teacher mimes this action!</div>
+      <div class="mime-hint" id="g2-hint">eating grass slowly 🌿</div>
+      <div class="q-sub" style="margin-top:10px">兩隊搶答：What is he/she doing? 然後猜動物！</div>
+    </div>
+    <div class="question-box" style="--qc:#A29BFE;padding:1rem">
+      <div class="q-label">點擊揭開答案 👇</div>
+      <span class="mime-animal" id="g2-animal" onclick="revealAnimal()">🐄</span>
+      <div class="mime-ans-full" id="g2-ans-full"></div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-play" onclick="revealAnimal()">👁 揭開答案</button>
+      <button class="btn btn-next" onclick="g2Next()">下一題 →</button>
+      <button class="btn btn-reset" onclick="startGame(2)">重新開始</button>
+    </div>
+  </div>
+
+  <!-- game 3 screen -->
+  <div class="screen" id="screen-g3">
+    <div class="game-header-bar">
+      <button class="back-to-menu" onclick="gameGoMenu()">← 返回</button>
+      <span class="game-title-chip" style="background:#54A0FF">✅ Game 3 · True or False?</span>
+      <span class="round-badge" id="g3-round">1 / 10</span>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="g3-progress" style="width:10%"></div></div>
+    <div class="tf-sentence">
+      <span class="tf-scene-emoji" id="g3-emoji">🐴🌿</span>
+      <div class="q-text" id="g3-sentence">Can you see the horse? Yes, I can. It is eating grass.</div>
+    </div>
+    <div class="tf-btn-row">
+      <button class="tf-btn true-btn" id="tf-true" onclick="tfAnswer(true)">⭕ TRUE</button>
+      <button class="tf-btn false-btn" id="tf-false" onclick="tfAnswer(false)">✕ FALSE</button>
+    </div>
+    <div class="tf-result" id="g3-result"></div>
+    <div class="answer-reveal" id="g3-answer"><div class="ans-label">✓ Answer</div><div class="ans-text" id="g3-ans-text"></div></div>
+    <div class="action-row">
+      <button class="btn btn-next" onclick="g3Next()">下一題 →</button>
+      <button class="btn btn-reset" onclick="startGame(3)">重新開始</button>
+    </div>
+  </div>
+
+</div><!-- end page-game -->
+
+<script>
+/* ══ HUB DATA ══ */
+const GAMES={
+  'howdy5_L1':'howdy5_unit1',
+  /* 之後繼續加：'howdy5_L2':'howdy5_unit2', */
+};
+const SERIES={
+  kids:[
+    {id:'kids1',name:'Howdy Kids 1',emoji:'🌟',accent:'#FD79A8'},
+    {id:'kids2',name:'Howdy Kids 2',emoji:'🌈',accent:'#A29BFE'},
+  ],
+  howdy:Array.from({length:10},(_,i)=>({
+    id:`howdy${i+1}`,name:`Howdy ${i+1}`,
+    emoji:['🚀','🦁','🐬','🌺','🎸','🦊','🌍','🎯','🦋','🏆'][i],
+    accent:['#FF6B6B','#FF9F43','#FECA57','#1DD1A1','#54A0FF','#A29BFE','#FD79A8','#FF6B6B','#1DD1A1','#FECA57'][i]
+  }))
+};
+let curSeries='kids',curBook=null;
+
+/* floating bg */
+(()=>{
+  const c=document.getElementById('floats');
+  const cols=['#FF6B6B','#FF9F43','#FECA57','#1DD1A1','#54A0FF','#A29BFE','#FD79A8'];
+  for(let i=0;i<18;i++){
+    const el=document.createElement('div'),s=20+Math.random()*50,dur=12+Math.random()*20,del=-Math.random()*dur;
+    el.className='float';
+    el.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;bottom:${-s}px;background:${cols[i%cols.length]};animation-duration:${dur}s;animation-delay:${del}s;border-radius:${Math.random()>.5?'50%':'30%'};`;
+    c.appendChild(el);
+  }
+})();
+
+function hasGame(id,slot){return!!GAMES[id+'_'+slot];}
+
+function renderBooks(){
+  const g=document.getElementById('book-grid'),books=SERIES[curSeries];
+  document.getElementById('section-label').textContent=curSeries==='kids'?'選擇 Howdy Kids 課本 👇':'選擇 Howdy 課本 👇';
+  g.innerHTML=books.map(b=>`
+    <div class="book-card ${curBook===b.id?'selected':''}" style="--accent:${b.accent}" onclick="selectBook('${b.id}','${b.name}','${b.accent}')">
+      <span class="book-emoji">${b.emoji}</span><div class="book-name">${b.name}</div>
+    </div>`).join('');
+}
+
+function selectSeries(s){
+  curSeries=s;curBook=null;
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&s==='kids')||(i===1&&s==='howdy')));
+  document.getElementById('lesson-section').classList.remove('visible');
+  renderBooks();
+}
+
+function selectBook(id,name,accent){
+  curBook=id;renderBooks();
+  document.getElementById('lesson-book-tag').textContent=name;
+  document.getElementById('lesson-book-tag').style.background=accent;
+  document.querySelector('.lesson-section').style.setProperty('--accent',accent);
+  let html='';
+  for(let i=1;i<=8;i++){
+    const slot='L'+i,has=hasGame(id,slot);
+    html+=`<button class="lesson-btn ${has?'has-game':''}" onclick="openGame('${id}','${slot}','${name}','Unit ${i}','${accent}')">
+      <span class="${has?'game-badge':'no-badge'}"></span>
+      <span class="l-num">${i}</span><span class="l-label">Unit ${i}</span>
+    </button>`;
+  }
+  ['mid','fin'].forEach((slot,idx)=>{
+    const has=hasGame(id,slot),lbl=idx===0?'期中':'期末';
+    html+=`<button class="lesson-btn special ${has?'has-game':''}" onclick="openGame('${id}','${slot}','${name}','${lbl}複習','${accent}')">
+      <span class="${has?'game-badge':'no-badge'}"></span>
+      <span class="l-num">${lbl}</span><span class="l-label">複習遊戲</span>
+    </button>`;
+  });
+  document.getElementById('lesson-grid').innerHTML=html;
+  document.getElementById('lesson-section').classList.add('visible');
+  document.getElementById('lesson-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function clearBook(){
+  curBook=null;renderBooks();
+  document.getElementById('lesson-section').classList.remove('visible');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function openGame(bookId,slot,bookName,lessonName,accent){
+  const key=bookId+'_'+slot,gameId=GAMES[key];
+  document.getElementById('tb-book').textContent=bookName;
+  document.getElementById('tb-lesson').textContent=lessonName;
+  document.getElementById('page-hub').classList.remove('active');
+  document.getElementById('page-game').classList.add('active');
+  window.scrollTo(0,0);
+  if(gameId==='howdy5_unit1'){
+    showScreen('menu');setDot(0);
+  } else {
+    showScreen('placeholder');
+  }
+}
+
+function closeGame(){
+  document.getElementById('page-game').classList.remove('active');
+  document.getElementById('page-hub').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ══ GAME LOGIC ══ */
+let scores={a:0,b:0};
+function addScore(t,n){scores[t]=Math.max(0,scores[t]+n);document.getElementById('score-'+t).textContent=scores[t];}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('screen-'+id);
+  if(el){el.classList.add('active');}
+  else{
+    /* dynamic placeholder */
+    const ph=document.createElement('div');
+    ph.className='screen active';ph.id='screen-placeholder';
+    ph.innerHTML=`<div class="game-placeholder"><div class="big-emoji">🎮</div><h2>遊戲即將加入！</h2><p>這個課次的遊戲正在製作中，<br>敬請期待！</p></div>`;
+    document.getElementById('page-game').appendChild(ph);
+  }
+  window.scrollTo(0,0);
+}
+function gameGoMenu(){showScreen('menu');setDot(0);}
+function setDot(n){for(let i=0;i<4;i++){const d=document.getElementById('dot'+i);d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i>0&&i<n)d.classList.add('done');}}
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+const G1=[
+  {emoji:'🐄',q:'What is the cow doing?',ans:'It is drinking milk.',opts:['It is drinking milk.','It is eating grass.','It is sleeping.','It is running.']},
+  {emoji:'🐷',q:'What is the pig doing?',ans:'It is eating.',opts:['It is flying.','It is eating.','It is swimming.','It is sleeping.']},
+  {emoji:'🐴',q:'What is the horse doing?',ans:'It is running.',opts:['It is running.','It is drinking.','It is singing.','It is jumping.']},
+  {emoji:'🐔🐔',q:'What are the chickens doing?',ans:'They are eating.',opts:['They are sleeping.','They are eating.','They are flying.','They are running.']},
+  {emoji:'🐑',q:'What is the sheep doing?',ans:'It is eating grass.',opts:['It is eating grass.','It is jumping.','It is drinking.','It is sleeping.']},
+  {emoji:'🦆',q:'What is the duck doing?',ans:'It is swimming.',opts:['It is running.','It is eating.','It is swimming.','It is flying.']},
+  {emoji:'🐐🐐',q:'What are the goats doing?',ans:'They are watching the cows.',opts:['They are watching the cows.','They are eating grass.','They are running.','They are sleeping.']},
+  {emoji:'🐭',q:'What is the mouse doing?',ans:'It is sleeping.',opts:['It is running.','It is eating.','It is sleeping.','It is jumping.']},
+];
+let g1arr=[],g1i=0;
+function g1Load(){
+  const d=g1arr[g1i];
+  document.getElementById('g1-emoji').textContent=d.emoji;
+  document.getElementById('g1-question').textContent=d.q;
+  document.getElementById('g1-round').textContent=(g1i+1)+' / '+g1arr.length;
+  document.getElementById('g1-progress').style.width=((g1i+1)/g1arr.length*100)+'%';
+  document.getElementById('g1-answer').classList.remove('show');
+  const grid=document.getElementById('g1-options');grid.innerHTML='';
+  shuffle(d.opts).forEach(o=>{
+    const isA=o===d.ans,btn=document.createElement('button');
+    btn.className='opt-btn';
+    btn.innerHTML=`<span class="opt-emoji" style="visibility:hidden">${isA?'✅':'❌'}</span><span>${o}</span>`;
+    btn.onclick=function(){
+      document.querySelectorAll('.opt-btn').forEach(b=>{b.onclick=null;b.querySelector('.opt-emoji').style.visibility='visible';});
+      btn.classList.add(isA?'correct':'wrong');
+      document.getElementById('g1-ans-text').textContent=d.ans;
+      document.getElementById('g1-answer').classList.add('show');
+    };
+    grid.appendChild(btn);
+  });
+}
+function g1Next(){g1i=(g1i+1)%g1arr.length;g1Load();}
+
+const G2=[
+  {hint:'eating grass slowly 🌿',animal:'🐄',ans:'It is eating grass. → cow 🐄'},
+  {hint:'rolling in the mud 🌧️',animal:'🐷',ans:'It is rolling in the mud. → pig 🐷'},
+  {hint:'running very fast! 💨',animal:'🐴',ans:'It is running. → horse 🐴'},
+  {hint:'pecking the ground 👇',animal:'🐔',ans:'It is eating. → chicken 🐔'},
+  {hint:'chewing slowly 🌿',animal:'🐑',ans:'It is eating grass. → sheep 🐑'},
+  {hint:'swimming and splashing 💦',animal:'🦆',ans:'It is swimming. → duck 🦆'},
+  {hint:'jumping on rocks 🪨',animal:'🐐',ans:'It is jumping. → goat 🐐'},
+  {hint:'squeaking and running 🏃',animal:'🐭',ans:'It is running. → mouse 🐭'},
+  {hint:'flying and buzzing 🔊',animal:'🐝',ans:'It is flying. → bee 🐝'},
+  {hint:'flying away quickly 🌬️',animal:'🦟',ans:'It is flying. → mosquito 🦟'},
+];
+let g2arr=[],g2i=0,g2rev=false;
+function g2Load(){
+  const d=g2arr[g2i];
+  document.getElementById('g2-hint').textContent=d.hint;
+  document.getElementById('g2-round').textContent=(g2i+1)+' / '+g2arr.length;
+  document.getElementById('g2-progress').style.width=((g2i+1)/g2arr.length*100)+'%';
+  const a=document.getElementById('g2-animal');a.textContent=d.animal;a.classList.remove('revealed');
+  const af=document.getElementById('g2-ans-full');af.textContent='';af.classList.remove('show');
+  g2rev=false;
+}
+function revealAnimal(){
+  if(g2rev)return;g2rev=true;
+  document.getElementById('g2-animal').classList.add('revealed');
+  const af=document.getElementById('g2-ans-full');af.textContent=g2arr[g2i].ans;af.classList.add('show');
+}
+function g2Next(){g2i=(g2i+1)%g2arr.length;g2Load();}
+
+const G3=[
+  {scene:'🐴🌿',sentence:'Can you see the horse? Yes, I can. It is eating grass.',correct:true},
+  {scene:'🦆💦',sentence:'Can you see the duck? Yes, I can. It is swimming.',correct:true},
+  {scene:'🐄🏃',sentence:'Can you see the cow? Yes, I can. It is running.',correct:false,explain:'FALSE → It is drinking milk.'},
+  {scene:'🐝✈️',sentence:'Can you see the bee? Yes, I can. It is flying.',correct:true},
+  {scene:'🐑🏃',sentence:'Can you see the sheep? Yes, I can. They are running.',correct:false,explain:'FALSE → They are eating grass.'},
+  {scene:'🐔🌾',sentence:'Can you see the chickens? Yes, I can. They are eating.',correct:true},
+  {scene:'🐭💦',sentence:'Can you see the mouse? Yes, I can. It is swimming.',correct:false,explain:'FALSE → It is running / sleeping.'},
+  {scene:'🐷🌧️',sentence:'Can you see the pig? Yes, I can. It is rolling in the mud.',correct:true},
+  {scene:'🐐🏔️',sentence:'Can you see the goats? Yes, I can. They are jumping.',correct:true},
+  {scene:'🦟🎵',sentence:'Can you hear the mosquitoes? Yes, I can. They are singing.',correct:false,explain:'FALSE → They are flying / buzzing.'},
+];
+let g3arr=[],g3i=0,g3done=false;
+function g3Load(){
+  const d=g3arr[g3i];
+  document.getElementById('g3-emoji').textContent=d.scene;
+  document.getElementById('g3-sentence').textContent=d.sentence;
+  document.getElementById('g3-round').textContent=(g3i+1)+' / '+g3arr.length;
+  document.getElementById('g3-progress').style.width=((g3i+1)/g3arr.length*100)+'%';
+  document.getElementById('g3-result').className='tf-result';
+  document.getElementById('g3-answer').classList.remove('show');
+  document.getElementById('tf-true').disabled=false;
+  document.getElementById('tf-false').disabled=false;
+  g3done=false;
+}
+function tfAnswer(val){
+  if(g3done)return;g3done=true;
+  const d=g3arr[g3i];
+  document.getElementById('tf-true').disabled=true;document.getElementById('tf-false').disabled=true;
+  const res=document.getElementById('g3-result');
+  if(val===d.correct){res.textContent='🎉 Correct! Well done!';res.className='tf-result correct';}
+  else{res.textContent='❌ Oops! Check again!';res.className='tf-result wrong';}
+  document.getElementById('g3-ans-text').textContent=d.correct?('⭕ TRUE — '+d.sentence):('✕ '+(d.explain||'FALSE'));
+  document.getElementById('g3-answer').classList.add('show');
+}
+function g3Next(){g3i=(g3i+1)%g3arr.length;g3Load();}
+
+function startGame(n){
+  if(n===1){g1arr=shuffle(G1);g1i=0;g1Load();showScreen('g1');setDot(1);}
+  if(n===2){g2arr=shuffle(G2);g2i=0;g2Load();showScreen('g2');setDot(2);}
+  if(n===3){g3arr=shuffle(G3);g3i=0;g3Load();showScreen('g3');setDot(3);}
+}
+
+renderBooks();
+</script>
+</body>
+</html>
