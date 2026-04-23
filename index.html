@@ -284,38 +284,29 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
 .g2-ans{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--purple);display:none;margin-top:4px;}
 .g2-ans.show{display:block;}
 
-/* ══ GAME 3 — animal picker → student makes sentence ══ */
+/* ══ GAME 3 — Mime It! ══ */
 #p-g3{overflow:hidden;}
-.g3-wrap{height:100%;display:flex;flex-direction:column;padding:.5rem .8rem .6rem;gap:.6rem;max-width:900px;margin:0 auto;width:100%;}
+.g3-wrap{height:100%;display:flex;flex-direction:column;padding:.5rem .8rem .6rem;gap:.6rem;max-width:1000px;margin:0 auto;width:100%;}
 .g3-topbar{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.g3-instr{font-family:'Fredoka One',cursive;font-size:14px;color:var(--muted);text-align:center;flex-shrink:0;}
-.g3-animals{
-  flex-shrink:0;
-  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
-}
-.g3-animal-btn{
-  background:var(--card);border:2.5px solid #E0E0E0;border-radius:var(--r);
-  padding:.6rem .4rem;cursor:pointer;text-align:center;box-shadow:var(--shadow);
-  transition:all .18s cubic-bezier(.34,1.56,.64,1);
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-}
-.g3-animal-btn:hover{border-color:var(--purple);background:#F3F2FF;transform:translateY(-3px);}
-.g3-animal-btn.on{border-color:var(--purple);background:var(--purple);}
-.g3-animal-btn .ae{font-size:clamp(28px,3.5vw,44px);line-height:1;}
-.g3-animal-btn .an{font-family:'Fredoka One',cursive;font-size:clamp(11px,1.3vw,14px);color:var(--text);}
-.g3-animal-btn.on .an{color:#fff;}
-/* Sentence display */
-.g3-sentence-box{
-  flex:1;background:var(--card);border-radius:var(--r);border-top:5px solid var(--blue);
-  box-shadow:var(--shadow);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  padding:1rem;text-align:center;
-}
-.g3-prompt-lbl{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;}
-.g3-selected-animal{font-size:clamp(48px,7vw,80px);line-height:1;}
-.g3-prompt{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,3.5vw,2.2rem);color:var(--text);line-height:1.3;}
-.g3-prompt em{color:var(--purple);font-style:normal;}
-.g3-start-msg{font-size:14px;color:var(--muted);font-weight:700;}
+.g3-instr-box{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:10px 16px;flex-shrink:0;box-shadow:var(--shadow);}
+.g3-instr-title{font-family:'Fredoka One',cursive;font-size:16px;color:var(--text);}
+.g3-instr-sub{font-size:12px;color:var(--muted);font-weight:700;}
+.g3-main{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3-performer-card,.g3-audience-card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden;}
+.g3-performer-card{border-top:6px solid var(--orange);}
+.g3-audience-card{border-top:6px solid var(--green);}
+.g3-card-label{font-family:'Fredoka One',cursive;font-size:15px;color:var(--text);flex-shrink:0;}
+.g3-action-cover,.g3-answer-cover{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--bg);border-radius:12px;min-height:0;}
+.g3-action-reveal{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:0;}
+.g3-action-emoji{font-size:clamp(48px,8vw,80px);line-height:1;}
+.g3-action-text{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,3vw,2rem);color:var(--orange);text-align:center;line-height:1.2;}
+.g3-question-area{background:var(--bg);border-radius:12px;padding:12px;text-align:center;flex-shrink:0;}
+.g3-q-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;}
+.g3-q-pattern{font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.5rem);color:var(--blue);margin:4px 0;}
+.g3-q-sub{font-size:13px;font-weight:700;color:var(--muted);}
+.g3-answer-reveal{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#E8FAF5;border-radius:12px;padding:12px;min-height:0;}
+.g3-ans-label{font-size:11px;font-weight:800;color:var(--green);letter-spacing:.07em;}
+.g3-ans-text{font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.5rem);color:var(--text);text-align:center;line-height:1.3;}
 .g3-act{display:flex;gap:8px;justify-content:center;flex-shrink:0;}
 
 /* ══ REVIEW — 4 card menu + subpages ══ */
@@ -553,21 +544,67 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
   <div class="g3-wrap">
     <div class="g3-topbar">
       <button class="btn-back" onclick="goMenu()">&#x2190; &#x8FD4;&#x56DE;</button>
-      <span class="chip" style="background:#54A0FF">&#x1F4AC; Game 3 &middot; Make a Sentence!</span>
+      <span class="chip" style="background:#54A0FF">&#x1F3AD; Game 3 &middot; Mime It!</span>
+      <span class="badge" id="g3-badge">1/8</span>
+      <div style="flex:1"></div>
+      <div class="pbar-wrap" style="width:120px;"><div class="pbar" id="g3-pbar" style="width:12.5%"></div></div>
     </div>
-    <div class="g3-instr">&#x8001;&#x5E2B;&#x9EDE;&#x9078;&#x4E00;&#x500B;&#x52D5;&#x7269; &rarr; &#x5B78;&#x751F;&#x8AAD;&#x51FA;&#x5B8C;&#x6574;&#x7684;&#x53E5;&#x5B50;&#xFF01;</div>
-    <div class="g3-animals" id="g3-animals"></div>
-    <div class="g3-sentence-box" id="g3-box">
-      <div class="g3-start-msg">&#x1F446; &#x9EDE;&#x4E0A;&#x65B9;&#x7684;&#x52D5;&#x7269;&#x958B;&#x59CB;&#xFF01;</div>
+
+    <!-- 說明區 -->
+    <div class="g3-instr-box">
+      <span style="font-size:22px;">🎭</span>
+      <div>
+        <div class="g3-instr-title">比手畫腳 Mime It!</div>
+        <div class="g3-instr-sub">一位學生上台看動作 → 比手畫腳 → 全班說出完整句子！</div>
+      </div>
     </div>
+
+    <!-- 主要卡片區 -->
+    <div class="g3-main">
+
+      <!-- 左：給表演者看 -->
+      <div class="g3-performer-card">
+        <div class="g3-card-label">🙋 表演者看這裡</div>
+        <div class="g3-action-cover" id="g3-cover">
+          <span style="font-size:36px;">👁️</span>
+          <div style="font-family:'Fredoka One',cursive;font-size:16px;color:var(--muted);">老師點擊揭開</div>
+        </div>
+        <div class="g3-action-reveal" id="g3-action" style="display:none;">
+          <div class="g3-action-emoji" id="g3-emo"></div>
+          <div class="g3-action-text" id="g3-act-txt"></div>
+        </div>
+        <button class="btn btn-orange" id="g3-show-btn" onclick="g3ShowPerformer()" style="margin-top:auto;">
+          👁️ 給表演者看
+        </button>
+      </div>
+
+      <!-- 右：全班猜答案 -->
+      <div class="g3-audience-card">
+        <div class="g3-card-label">👥 全班猜一猜</div>
+        <div class="g3-question-area">
+          <div class="g3-q-label">句型提示</div>
+          <div class="g3-q-pattern" id="g3-pattern"></div>
+          <div class="g3-q-sub">He / She is ___ing.</div>
+        </div>
+        <div class="g3-answer-cover" id="g3-ans-cover">
+          <span style="font-size:32px;">🤔</span>
+          <div style="font-family:'Fredoka One',cursive;font-size:15px;color:var(--muted);">全班猜完再揭開！</div>
+        </div>
+        <div class="g3-answer-reveal" id="g3-ans-reveal" style="display:none;">
+          <div class="g3-ans-label">✓ 答案</div>
+          <div class="g3-ans-text" id="g3-ans-text"></div>
+        </div>
+        <button class="btn btn-green" id="g3-reveal-btn" onclick="g3ShowAnswer()" style="margin-top:auto;">
+          🎉 揭開答案
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 底部按鈕 -->
     <div class="g3-act">
-      <button class="btn btn-green" onclick="g3Next()">&#x6362;&#x4E00;&#x500B;&#x53E5;&#x578B; &#x1F504;</button>
-      <button class="btn btn-orange" onclick="showG3Ans()">&#x1F441; &#x986F;&#x793A;&#x7B54;&#x6848;</button>
-      <button class="btn btn-grey" onclick="startG3()">&#x91CD;&#x65B0;&#x958B;&#x59CB;</button>
-    </div>
-    <div class="reveal" id="g3-rev">
-      <div class="reveal-lbl">&#x2713; Answer</div>
-      <div class="reveal-txt" id="g3-ans"></div>
+      <button class="btn btn-purple" onclick="g3Next()">下一題 →</button>
+      <button class="btn btn-grey" onclick="startG3()">重新開始</button>
     </div>
   </div>
 </div>
@@ -973,8 +1010,18 @@ function loadG1(){
     b.onclick=function(){
       document.querySelectorAll('.opt').forEach(function(x){x.onclick=null;});
       b.classList.add(isA?'correct':'wrong');
+      if(!isA){
+        // also highlight the correct answer
+        document.querySelectorAll('.opt').forEach(function(x){
+          if(x.textContent===d.ans) x.classList.add('correct');
+        });
+      }
+      var rev=document.getElementById('g1-rev');
+      var lbl=rev.querySelector('.reveal-lbl');
+      rev.style.background=isA?'var(--green)':'var(--red)';
+      lbl.textContent=isA?'✓ Correct!':'✗ Wrong!';
       document.getElementById('g1-ans').textContent=d.ans;
-      document.getElementById('g1-rev').classList.add('show');
+      rev.classList.add('show');
     };
     opts.appendChild(b);
   });
@@ -1011,83 +1058,58 @@ function revealG2(){
 function g2Next(){g2i=(g2i+1)%g2arr.length;loadG2();}
 
 /* GAME 3 — sentence maker */
-var G3A=[
-  {id:'horse',   e:'\uD83D\uDC34', name:'horse',      plural:false},
-  {id:'chicken', e:'\uD83D\uDC14', name:'chickens',   plural:true},
-  {id:'pig',     e:'\uD83D\uDC37', name:'pigs',       plural:true},
-  {id:'cow',     e:'\uD83D\uDC04', name:'cows',       plural:true},
-  {id:'sheep',   e:'\uD83D\uDC11', name:'sheep',      plural:true},
-  {id:'duck',    e:'\uD83E\uDD86', name:'ducks',      plural:true},
-  {id:'dog',     e:'\uD83D\uDC15', name:'dog',        plural:false},
-  {id:'mouse',   e:'\uD83D\uDC2D', name:'mouse',      plural:false},
-  {id:'bee',     e:'\uD83D\uDC1D', name:'bees',       plural:true},
-  {id:'mosquito',e:'\uD83E\uDDA0', name:'mosquitoes', plural:true}
+/* ══ GAME 3 — Mime It! ══ */
+var G3CARDS = [
+  {emo:'🐴', action:'riding a horse',     pattern:'He / She is riding a horse.',   ans:'He is riding a horse. / She is riding a horse.'},
+  {emo:'🐔', action:'feeding the chickens',pattern:'He / She is feeding the chickens.',ans:'He is feeding the chickens. / She is feeding the chickens.'},
+  {emo:'🐷', action:'feeding the pigs',   pattern:'He / She is feeding the pigs.', ans:'He is feeding the pigs. / She is feeding the pigs.'},
+  {emo:'🐄', action:'watching the cows',  pattern:'He / She is watching the cows.',ans:'He is watching the cows. / She is watching the cows.'},
+  {emo:'🐑', action:'counting the sheep', pattern:'He / She is counting the sheep.',ans:'He is counting the sheep. / She is counting the sheep.'},
+  {emo:'🦆', action:'chasing the ducks',  pattern:'He / She is chasing the ducks.',ans:'He is chasing the ducks. / She is chasing the ducks.'},
+  {emo:'🐕', action:'walking the dog',    pattern:'He / She is walking the dog.',  ans:'He is walking the dog. / She is walking the dog.'},
+  {emo:'🏃', action:'running in the field',pattern:'He / She is running.',         ans:'He is running. / She is running.'}
 ];
-/* sentence templates: type, template string with {name}, answer */
-var G3T=[
-  {type:'what',  tpl:function(a){return a.plural?'What are the '+a.name+' doing?':'What is the '+a.name+' doing?'},
-   ans:function(a){
-     var m={horse:'It is running. / It is being ridden.',chicken:'They are running. / They are eating.',pig:'They are eating. / They are being fed.',cow:'They are eating. / They are standing.',sheep:'They are standing in the field.',duck:'They are swimming. / They are flying.',dog:'It is sleeping.',mouse:'It is running.',bee:'It is flying.',mosquito:'They are flying.'};
-     return m[a.id]||'...';
-   }},
-  {type:'see',   tpl:function(a){return 'Can you see the '+a.name+'?'},
-   ans:function(a){
-     var m={horse:'Yes, I can. It is running.',chicken:'Yes, I can. They are running.',pig:'Yes, I can. They are eating.',cow:'Yes, I can. They are eating.',sheep:'Yes, I can. They are standing.',duck:'Yes, I can. They are swimming.',dog:'Yes, I can. It is sleeping.',mouse:'Yes, I can. It is running.',bee:'Yes, I can. It is flying.',mosquito:'Yes, I can. They are flying.'};
-     return m[a.id]||'Yes, I can.';
-   }},
-  {type:'hear',  tpl:function(a){return 'Can you hear the '+a.name+'?'},
-   ans:function(a){
-     var m={chicken:'Yes, I can. They are clucking.',duck:'Yes, I can. They are quacking.',bee:'Yes, I can. It is buzzing.',mosquito:'Yes, I can. They are buzzing.',cow:'Yes, I can. They are mooing.',pig:'Yes, I can. They are oinking.',sheep:'Yes, I can. They are baaing.',horse:'Yes, I can. It is neighing.'};
-     return m[a.id]?m[a.id]:'(No — '+a.name+' are quiet here!)';
-   }}
-];
-var g3sel=null,g3tpl=null,g3tidx=0;
+var g3arr=[], g3i=0;
 
 function startG3(){
-  buildG3Animals();showPage('g3');setDots(3);
-  g3sel=null;g3tpl=null;g3tidx=0;
-  document.getElementById('g3-box').innerHTML='<div class="g3-start-msg">&#x1F446; &#x9EDE;&#x4E0A;&#x65B9;&#x7684;&#x52D5;&#x7269;&#x958B;&#x59CB;&#xFF01;</div>';
-  document.getElementById('g3-rev').classList.remove('show');
+  g3arr = shu(G3CARDS.slice());
+  g3i = 0;
+  showPage('g3'); setDots(3);
+  loadG3();
 }
-function buildG3Animals(){
-  var g=document.getElementById('g3-animals');
-  g.innerHTML=G3A.map(function(a){
-    return '<button class="g3-animal-btn" id="ga-'+a.id+'" onclick="g3Pick(\''+a.id+'\')">'
-      +'<span class="ae">'+a.e+'</span><span class="an">'+a.name+'</span></button>';
-  }).join('');
+
+function loadG3(){
+  var d = g3arr[g3i];
+  document.getElementById('g3-badge').textContent = (g3i+1)+'/'+g3arr.length;
+  document.getElementById('g3-pbar').style.width = ((g3i+1)/g3arr.length*100)+'%';
+  document.getElementById('g3-pattern').textContent = d.pattern;
+  // Reset performer side
+  document.getElementById('g3-cover').style.display = 'flex';
+  document.getElementById('g3-action').style.display = 'none';
+  document.getElementById('g3-show-btn').style.display = 'inline-flex';
+  document.getElementById('g3-emo').textContent = d.emo;
+  document.getElementById('g3-act-txt').textContent = d.action;
+  // Reset audience side
+  document.getElementById('g3-ans-cover').style.display = 'flex';
+  document.getElementById('g3-ans-reveal').style.display = 'none';
+  document.getElementById('g3-reveal-btn').style.display = 'inline-flex';
+  document.getElementById('g3-ans-text').textContent = d.ans;
 }
-function g3Pick(id){
-  document.querySelectorAll('.g3-animal-btn').forEach(function(b){b.classList.remove('on');});
-  document.getElementById('ga-'+id).classList.add('on');
-  g3sel=id;g3tidx=Math.floor(Math.random()*G3T.length);
-  g3tpl=G3T[g3tidx];
-  showG3Q();
-  document.getElementById('g3-rev').classList.remove('show');
+
+function g3ShowPerformer(){
+  document.getElementById('g3-cover').style.display = 'none';
+  document.getElementById('g3-action').style.display = 'flex';
+  document.getElementById('g3-show-btn').style.display = 'none';
 }
-function showG3Q(){
-  var a=G3A.find(function(x){return x.id===g3sel;});
-  var q=g3tpl.tpl(a);
-  var typeColors={what:'#FF9F43',see:'#54A0FF',hear:'#1DD1A1'};
-  var typeLabels={what:'What is/are ___ doing?',see:'Can you see the ___?',hear:'Can you hear the ___?'};
-  document.getElementById('g3-box').innerHTML=
-    '<div class="g3-prompt-lbl" style="background:'+typeColors[g3tpl.type]+';color:#fff;padding:4px 14px;border-radius:99px;font-size:12px;">'+typeLabels[g3tpl.type]+'</div>'
-    +'<div class="g3-selected-animal">'+a.e+'</div>'
-    +'<div class="g3-prompt">'+q+'</div>'
-    +'<div style="font-size:13px;color:var(--muted);font-weight:700;">&#x5B78;&#x751F;&#x8ACB;&#x56DE;&#x7B54;&#x9019;&#x500B;&#x554F;&#x53E5;&#xFF01;</div>';
+
+function g3ShowAnswer(){
+  document.getElementById('g3-ans-cover').style.display = 'none';
+  document.getElementById('g3-ans-reveal').style.display = 'flex';
+  document.getElementById('g3-reveal-btn').style.display = 'none';
 }
-function showG3Ans(){
-  if(!g3sel)return;
-  var a=G3A.find(function(x){return x.id===g3sel;});
-  document.getElementById('g3-ans').textContent=g3tpl.ans(a);
-  document.getElementById('g3-rev').classList.add('show');
-}
+
 function g3Next(){
-  if(!g3sel)return;
-  g3tidx=(g3tidx+1)%G3T.length;
-  g3tpl=G3T[g3tidx];
-  showG3Q();
-  document.getElementById('g3-rev').classList.remove('show');
+  g3i = (g3i+1) % g3arr.length;
+  loadG3();
 }
 </script>
-</body>
-</html>
