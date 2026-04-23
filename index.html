@@ -113,27 +113,29 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
 #gamePanel{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
 
 /* ══ SCORE BAR ══ */
+#gamePanel{flex-direction:row !important;}
 #scorebar{
-  display:flex;align-items:center;
-  gap:8px;background:var(--card);
-  padding:7px 14px;border-bottom:3px solid rgba(0,0,0,.07);
-  flex-shrink:0;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;background:var(--card);
+  padding:14px 12px;border-right:3px solid rgba(0,0,0,.07);
+  flex-shrink:0;position:relative;width:160px;
 }
-.team-block{display:flex;align-items:center;gap:8px;border-radius:14px;padding:6px 14px;flex-shrink:0;}
-.team-block.a{background:var(--red);box-shadow:0 4px 0 var(--red-d);}
-.team-block.b{background:var(--blue);box-shadow:0 4px 0 var(--blue-d);}
-.t-label{font-family:'Fredoka One',cursive;font-size:14px;color:#fff;letter-spacing:.03em;}
-.t-score{font-family:'Fredoka One',cursive;font-size:48px;color:#fff;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.15);}
-.t-btns{display:flex;flex-direction:column;gap:4px;}
-.sc-btn{font-family:'Fredoka One',cursive;font-size:15px;border:none;border-radius:8px;cursor:pointer;padding:3px 12px;color:#fff;background:rgba(0,0,0,.22);transition:all .12s;line-height:1.2;}
+#main{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.team-block{display:flex;align-items:center;gap:12px;border-radius:18px;padding:12px 16px;flex-shrink:0;width:100%;}
+.team-block.a{background:var(--red);box-shadow:0 6px 0 var(--red-d);}
+.team-block.b{background:var(--blue);box-shadow:0 6px 0 var(--blue-d);}
+.t-label{font-family:'Fredoka One',cursive;font-size:16px;color:#fff;letter-spacing:.03em;}
+.t-score{font-family:'Fredoka One',cursive;font-size:64px;color:#fff;line-height:1;text-shadow:0 4px 0 rgba(0,0,0,.15);}
+.t-btns{display:flex;flex-direction:column;gap:6px;}
+.sc-btn{font-family:'Fredoka One',cursive;font-size:18px;border:none;border-radius:10px;cursor:pointer;padding:5px 14px;color:#fff;background:rgba(0,0,0,.22);transition:all .12s;line-height:1.2;}
 .sc-btn:hover{background:rgba(0,0,0,.38);transform:scale(1.07);}
 .sc-btn:active{transform:scale(.94);}
 .t-roster-btn{font-family:'Fredoka One',cursive;font-size:11px;border:none;border-radius:8px;cursor:pointer;padding:3px 8px;color:#fff;background:rgba(0,0,0,.22);margin-top:2px;transition:all .12s;white-space:nowrap;}
 .t-roster-btn:hover{background:rgba(0,0,0,.38);}
-.roster-panel{position:absolute;top:calc(100% + 4px);background:var(--card);border-radius:var(--r);box-shadow:0 8px 24px rgba(0,0,0,.15);padding:10px;width:200px;z-index:500;display:none;flex-direction:column;gap:5px;}
+.roster-panel{position:absolute;left:calc(100% + 8px);top:0;background:var(--card);border-radius:var(--r);box-shadow:0 8px 24px rgba(0,0,0,.15);padding:10px;width:200px;z-index:500;display:none;flex-direction:column;gap:5px;}
 .roster-panel.open{display:flex;}
-.roster-panel.left{left:8px;}
-.roster-panel.right{right:8px;}
+.roster-panel.left{top:0;}
+.roster-panel.right{top:auto;bottom:0;}
 .roster-panel-title{font-family:'Fredoka One',cursive;font-size:13px;color:var(--text);margin-bottom:2px;}
 .roster-list{display:flex;flex-direction:column;gap:3px;max-height:150px;overflow-y:auto;}
 .roster-item{display:flex;align-items:center;gap:4px;background:#f5f5f5;border-radius:8px;padding:4px 8px;}
@@ -147,8 +149,8 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
 .roster-add-btn{font-family:'Fredoka One',cursive;font-size:14px;border:none;border-radius:8px;padding:5px 11px;background:var(--green);color:#fff;cursor:pointer;box-shadow:0 2px 0 var(--green-d);}
 .roster-add-btn:hover{transform:translateY(-1px);}
 .roster-empty{font-size:11px;color:var(--muted);text-align:center;padding:4px 0;}
-.bar-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.bar-title{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);}
+.bar-mid{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 0;}
+.bar-title{font-family:'Fredoka One',cursive;font-size:11px;color:var(--muted);text-align:center;}
 .dots{display:flex;gap:7px;margin-top:5px;}
 .dot{width:11px;height:11px;border-radius:50%;background:#DFE6E9;transition:all .2s;cursor:pointer;}
 .dot.on{background:var(--orange);transform:scale(1.4);}
@@ -183,21 +185,21 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
 
 /* ══ MENU ══ */
 #p-menu{overflow:hidden;}
-.menu-wrap{height:100%;display:flex;flex-direction:column;gap:10px;padding:10px 16px 12px;max-width:1000px;margin:0 auto;width:100%;}
+.menu-wrap{height:100%;display:flex;flex-direction:column;gap:12px;padding:12px 20px 16px;max-width:1000px;margin:0 auto;width:100%;}
 .menu-head{text-align:center;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:8px;padding:2px 0;}
 .menu-head h1{font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--text);}
 .menu-head h1 em{color:var(--orange);font-style:normal;}
 .menu-head p{font-size:12px;color:var(--muted);font-weight:700;}
-.card-review{flex:1.4;background:var(--card);border-radius:var(--r);border-top:6px solid #1DD1A1;box-shadow:var(--shadow);cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:1rem 1.5rem;text-align:center;}
+.card-review{flex:1.6;background:var(--card);border-radius:var(--r);border-top:6px solid #1DD1A1;box-shadow:var(--shadow);cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:1.5rem 2rem;text-align:center;min-height:0;}
 .card-review:hover{transform:translateY(-4px);box-shadow:0 10px 0 rgba(0,0,0,.12);}
-.cards-row{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.card{background:var(--card);border-radius:var(--r);padding:.8rem .7rem;text-align:center;cursor:pointer;box-shadow:var(--shadow);border-top:5px solid var(--cc,#ddd);transition:all .18s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
+.cards-row{flex:2;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;min-height:0;}
+.card{background:var(--card);border-radius:var(--r);padding:1.2rem 1rem;text-align:center;cursor:pointer;box-shadow:var(--shadow);border-top:5px solid var(--cc,#ddd);transition:all .18s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:0;}
 .card:hover{transform:translateY(-4px);box-shadow:0 10px 0 rgba(0,0,0,.12);}
-.card-emo{font-size:clamp(26px,3.5vw,38px);display:block;}
-.card-tag{font-family:'Fredoka One',cursive;font-size:10px;color:var(--muted);letter-spacing:.08em;}
-.card-title{font-family:'Fredoka One',cursive;font-size:clamp(13px,1.8vw,17px);color:var(--text);}
-.card-desc{font-size:11px;color:var(--muted);font-weight:700;line-height:1.4;}
-.card-pill{color:#fff;border-radius:7px;font-size:10px;font-weight:800;padding:2px 8px;display:inline-block;margin-top:3px;background:var(--cc,#ddd);}
+.card-emo{font-size:clamp(36px,5vw,52px);display:block;}
+.card-tag{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);letter-spacing:.08em;}
+.card-title{font-family:'Fredoka One',cursive;font-size:clamp(16px,2.2vw,22px);color:var(--text);}
+.card-desc{font-size:13px;color:var(--muted);font-weight:700;line-height:1.4;}
+.card-pill{color:#fff;border-radius:7px;font-size:12px;font-weight:800;padding:4px 10px;display:inline-block;margin-top:4px;background:var(--cc,#ddd);}
 .card-review .card-emo{font-size:clamp(38px,5vw,54px);}
 .card-review .card-tag{font-family:'Fredoka One',cursive;font-size:11px;color:var(--muted);letter-spacing:.08em;}
 .card-review .card-title{font-family:'Fredoka One',cursive;font-size:clamp(16px,2.2vw,22px);color:var(--text);}
@@ -533,7 +535,7 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
         <div class="g2-hint" id="g2-hint">&#x554F;&#x53E5;</div>
       </div>
       <div>
-        <div class="g2-lbl">&#x9EDE;&#x64CA;&#x63ED;&#x958B;&#x52D5;&#x7269; &#x1F447;</div>
+        <div class="g2-lbl">&#x9EDE;&#x64CA;&#x63ED;&#x958B;&#x7B54;&#x6848; &#x1F447;</div>
         <span class="g2-animal" id="g2-animal" onclick="revealG2()">&#x1F404;</span>
         <div class="g2-ans" id="g2-ans"></div>
       </div>
