@@ -284,8 +284,27 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
 .g2-ans{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--purple);display:none;margin-top:4px;}
 .g2-ans.show{display:block;}
 
-/* ══ GAME 3 — Mime It! ══ */
-#p-g3{overflow:hidden;}
+
+/* ══ 備課清單 ══ */
+.prep-topbar{display:flex;align-items:center;gap:8px;padding:.6rem 1rem;flex-shrink:0;border-bottom:2px solid rgba(0,0,0,.06);}
+.prep-cards{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:24px;align-content:center;}
+.prep-card{background:var(--card);border-radius:20px;border-top:6px solid var(--pc);box-shadow:0 6px 0 rgba(0,0,0,.10);padding:28px 20px;text-align:center;cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;align-items:center;gap:8px;}
+.prep-card:hover{transform:translateY(-6px);box-shadow:0 12px 0 rgba(0,0,0,.10);}
+.prep-card-emo{font-size:40px;line-height:1;}
+.prep-card-title{font-family:'Fredoka One',cursive;font-size:13px;color:var(--pc);letter-spacing:.05em;text-transform:uppercase;}
+.prep-card-name{font-family:'Fredoka One',cursive;font-size:22px;color:var(--text);}
+.prep-card-sub{font-size:12px;font-weight:700;color:var(--muted);}
+.prep-detail{overflow:hidden;}
+.prep-detail-body{flex:1;overflow-y:auto;padding:.5rem 1rem 1.5rem;}
+.prep-table{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;border:1.5px solid rgba(0,0,0,.07);}
+.prep-row{display:grid;gap:0;border-bottom:1px solid rgba(0,0,0,.06);padding:10px 14px;font-size:13px;font-weight:700;color:var(--text);align-items:center;grid-template-columns:1fr 1.5fr;}
+.prep-row.three{grid-template-columns:1fr 1.2fr 1.1fr;}
+.prep-row:last-child{border-bottom:none;}
+.prep-row.prep-header{background:#F4F6F8;font-size:11px;font-weight:900;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;}
+.prep-row span:nth-child(2){color:var(--green);font-weight:800;}
+.prep-row span:nth-child(3){color:var(--muted);font-size:12px;}
+#rv-prep{overflow:hidden;}
+
 .g3-wrap{height:100%;display:flex;flex-direction:column;padding:.5rem .8rem .6rem;gap:.6rem;max-width:1000px;margin:0 auto;width:100%;}
 .g3-topbar{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .g3-instr-box{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:10px 16px;flex-shrink:0;box-shadow:var(--shadow);}
@@ -343,6 +362,8 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
 .rv-sub-inner{flex:1;overflow-y:auto;padding:.8rem 1.2rem 1rem;}
 .rv-sub-head{display:flex;align-items:center;gap:8px;padding:.6rem 1.2rem .3rem;flex-shrink:0;}
 .rv-sub-title{font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,2.5vw,1.7rem);color:var(--text);padding-bottom:8px;border-bottom:2px dashed #EEE;margin-bottom:10px;}
+#rv-prep{overflow:visible;}
+#rv-prep .prep-body{overflow-y:auto;}
 /* vocab */
 .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:9px;}
 .vc{background:var(--bg);border-radius:12px;padding:12px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;}
@@ -639,17 +660,115 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
         <div class="rc-title">Example Sentences</div>
         <div class="rc-desc">&#x8AB2;&#x672C;&#x4F8B;&#x53E5;</div>
       </div>
+      <div class="rv-card" style="--rc:#FD79A8" onclick="showRvSub('prep')">
+        <span class="rc-emo">📋</span>
+        <div class="rc-title">備課清單</div>
+        <div class="rc-desc">Game 1・2・3 題目總覽</div>
+      </div>
     </div>
   </div>
+  <!-- Subpage: 備課清單 -->
+  <div class="rv-sub" id="rv-prep">
 
-  <!-- Subpage: Vocabulary — Flash Card style -->
+    <!-- 主選單：三個遊戲卡片 -->
+    <div id="prep-menu" style="height:100%;display:flex;flex-direction:column;">
+      <div class="prep-topbar">
+        <button class="btn-back" onclick="showRvMenu()">← 返回</button>
+        <span class="chip" style="background:#FD79A8">📋 備課清單</span>
+      </div>
+      <div class="prep-cards">
+        <div class="prep-card" style="--pc:#FF9F43" onclick="showPrep('g1')">
+          <span class="prep-card-emo">🖼️</span>
+          <div class="prep-card-title">Game 1</div>
+          <div class="prep-card-name">What Is Doing?</div>
+          <div class="prep-card-sub">看圖選出正確句子・8題</div>
+        </div>
+        <div class="prep-card" style="--pc:#A29BFE" onclick="showPrep('g2')">
+          <span class="prep-card-emo">🎭</span>
+          <div class="prep-card-title">Game 2</div>
+          <div class="prep-card-name">Story Guess!</div>
+          <div class="prep-card-sub">看故事圖回答問題・8題</div>
+        </div>
+        <div class="prep-card" style="--pc:#54A0FF" onclick="showPrep('g3')">
+          <span class="prep-card-emo">🎬</span>
+          <div class="prep-card-title">Game 3</div>
+          <div class="prep-card-name">Mime It!</div>
+          <div class="prep-card-sub">比手畫腳全班說句子・8題</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game 1 詳細 -->
+    <div id="prep-g1" class="prep-detail" style="display:none;height:100%;flex-direction:column;">
+      <div class="prep-topbar">
+        <button class="btn-back" onclick="showPrep('menu')">← 返回</button>
+        <span class="chip" style="background:#FF9F43">🖼️ Game 1 · What Is Doing?</span>
+      </div>
+      <div class="prep-detail-body">
+        <div class="prep-table">
+          <div class="prep-row three prep-header"><span>題目</span><span>正確答案</span><span>選項（隨機排列）</span></div>
+          <div class="prep-row three"><span>What is Peter doing?</span><span>He is riding a horse.</span><span>riding / feeding pigs / watching cows / running</span></div>
+          <div class="prep-row three"><span>What are the chickens doing?</span><span>They are running.</span><span>sleeping / running / swimming / eating grass</span></div>
+          <div class="prep-row three"><span>What is Grandpa doing?</span><span>He is feeding the pigs.</span><span>riding / feeding pigs / watching cows / sleeping</span></div>
+          <div class="prep-row three"><span>What are the cows doing?</span><span>They are eating.</span><span>running / eating / swimming / jumping</span></div>
+          <div class="prep-row three"><span>What are the sheep doing?</span><span>They are standing in the field.</span><span>running / eating grass / standing in the field / sleeping</span></div>
+          <div class="prep-row three"><span>What are the ducks doing?</span><span>They are swimming.</span><span>flying / running / swimming / eating</span></div>
+          <div class="prep-row three"><span>What is the dog doing?</span><span>It is sleeping.</span><span>running / eating / sleeping / jumping</span></div>
+          <div class="prep-row three"><span>What is the mouse doing?</span><span>It is running.</span><span>flying / running / sleeping / swimming</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game 2 詳細 -->
+    <div id="prep-g2" class="prep-detail" style="display:none;height:100%;flex-direction:column;">
+      <div class="prep-topbar">
+        <button class="btn-back" onclick="showPrep('menu')">← 返回</button>
+        <span class="chip" style="background:#A29BFE">🎭 Game 2 · Story Guess!</span>
+      </div>
+      <div class="prep-detail-body">
+        <div class="prep-table">
+          <div class="prep-row prep-header"><span>老師問</span><span>正確答案</span></div>
+          <div class="prep-row"><span>Is Lucy feeding the chickens?</span><span>No, she is not. She is not feeding the chickens.</span></div>
+          <div class="prep-row"><span>What is Lucy doing?</span><span>She is brushing the horse.</span></div>
+          <div class="prep-row"><span>What are the boys doing?</span><span>They are running to the pond.</span></div>
+          <div class="prep-row"><span>Is Lucy swimming in the pond?</span><span>No, she is not. She is sitting under a tree.</span></div>
+          <div class="prep-row"><span>What is Lucy doing under the tree?</span><span>She is listening to the birds.</span></div>
+          <div class="prep-row"><span>Are the boys running to the pond?</span><span>Yes, they are. They are running to the pond.</span></div>
+          <div class="prep-row"><span>Is Lucy sleeping?</span><span>No, she is not. She is listening to the birds.</span></div>
+          <div class="prep-row"><span>Are the boys swimming?</span><span>No, they are not. They are running.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game 3 詳細 -->
+    <div id="prep-g3" class="prep-detail" style="display:none;height:100%;flex-direction:column;">
+      <div class="prep-topbar">
+        <button class="btn-back" onclick="showPrep('menu')">← 返回</button>
+        <span class="chip" style="background:#54A0FF">🎬 Game 3 · Mime It!</span>
+      </div>
+      <div class="prep-detail-body">
+        <div class="prep-table">
+          <div class="prep-row prep-header"><span>表演者看（動作）</span><span>全班說出的句子</span></div>
+          <div class="prep-row"><span>🐴 riding a horse</span><span>He / She is riding a horse.</span></div>
+          <div class="prep-row"><span>🐔 feeding the chickens</span><span>He / She is feeding the chickens.</span></div>
+          <div class="prep-row"><span>🐷 feeding the pigs</span><span>He / She is feeding the pigs.</span></div>
+          <div class="prep-row"><span>🐄 watching the cows</span><span>He / She is watching the cows.</span></div>
+          <div class="prep-row"><span>🐑 counting the sheep</span><span>He / She is counting the sheep.</span></div>
+          <div class="prep-row"><span>🦆 chasing the ducks</span><span>He / She is chasing the ducks.</span></div>
+          <div class="prep-row"><span>🐕 walking the dog</span><span>He / She is walking the dog.</span></div>
+          <div class="prep-row"><span>🏃 running in the field</span><span>He / She is running.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="rv-sub" id="rv-vocab">
     <div class="rv-sub-head">
       <button class="btn-back" onclick="showRvMenu()">&#x2190; &#x8FD4;&#x56DE;</button>
       <span class="chip" style="background:#FF9F43">&#x1F43E; Vocabulary</span>
       <span style="font-family:'Fredoka One',cursive;font-size:14px;color:var(--muted);margin-left:8px;" id="fc-counter">1 / 16</span>
     </div>
-    <!-- Flash card display: fills all space -->
     <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;padding:.3rem 1.2rem .4rem;gap:.4rem;">
       <div style="flex:1;min-height:0;width:100%;display:flex;align-items:center;gap:10px;">
         <button onclick="fcPrev()" style="flex-shrink:0;width:52px;height:52px;border-radius:50%;background:rgba(100,100,100,.15);border:none;cursor:pointer;font-size:24px;color:var(--text);transition:all .15s cubic-bezier(.34,1.56,.64,1);" onmouseover="this.style.background='rgba(100,100,100,.3)'" onmouseout="this.style.background='rgba(100,100,100,.15)'">&#8592;</button>
@@ -664,7 +783,6 @@ body::after{content:'';position:fixed;bottom:-100px;right:-80px;width:350px;heig
       </div>
       <div id="fc-hint" style="font-size:13px;color:var(--muted);font-weight:700;flex-shrink:0;">&#x9EDE;&#x64CA;&#x7FFB;&#x9762;&#x770B;&#x55AE;&#x5B57;</div>
     </div>
-    <!-- dot progress -->
     <div style="display:flex;justify-content:center;gap:5px;padding-bottom:.5rem;flex-shrink:0;" id="fc-dots"></div>
   </div>
 
@@ -930,11 +1048,22 @@ function fcPrev(){fcIdx=(fcIdx-1+FC.length)%FC.length;fcShowImg=true;fcRender();
 function fcFlip(){fcShowImg=!fcShowImg;fcRender();}
 function showRvSub(id){
   document.getElementById('rv-menu').style.display='none';
-  ['vocab','sp1','sp2','ex'].forEach(function(s){
+  ['vocab','sp1','sp2','ex','prep'].forEach(function(s){
     document.getElementById('rv-'+s).classList.remove('show');
   });
   document.getElementById('rv-'+id).classList.add('show');
   if(id==='vocab'){fcIdx=0;fcShowImg=true;fcRender();}
+  if(id==='prep'){showPrep('menu');}
+}
+
+function showPrep(which){
+  var sections=['menu','g1','g2','g3'];
+  sections.forEach(function(s){
+    var el=document.getElementById('prep-'+s);
+    if(el){el.style.display='none';}
+  });
+  var target=document.getElementById('prep-'+which);
+  if(target){target.style.display='flex';}
 }
 var sc={a:0,b:0};
 function addScore(t,n){sc[t]=Math.max(0,sc[t]+n);document.getElementById('s'+t).textContent=sc[t];}
@@ -1036,7 +1165,7 @@ var G2=[
   {hint:'What are the boys doing?',ans:'They are running to the pond.'},
   {hint:'Is Lucy swimming in the pond?',ans:'No, she is not. She is sitting under a tree.'},
   {hint:'What is Lucy doing under the tree?',ans:'She is listening to the birds.'},
-  {hint:'What is the dog doing?',ans:'It is running near the fence.'},
+  {hint:'Are the boys running to the pond?',ans:'Yes, they are. They are running to the pond.'},
   {hint:'Is Lucy sleeping?',ans:'No, she is not. She is listening to the birds.'},
   {hint:'Are the boys swimming?',ans:'No, they are not. They are running.'}
 ];
@@ -1060,14 +1189,14 @@ function g2Next(){g2i=(g2i+1)%g2arr.length;loadG2();}
 /* GAME 3 — sentence maker */
 /* ══ GAME 3 — Mime It! ══ */
 var G3CARDS = [
-  {emo:'🐴', action:'riding a horse',     pattern:'He / She is riding a horse.',   ans:'He is riding a horse. / She is riding a horse.'},
-  {emo:'🐔', action:'feeding the chickens',pattern:'He / She is feeding the chickens.',ans:'He is feeding the chickens. / She is feeding the chickens.'},
-  {emo:'🐷', action:'feeding the pigs',   pattern:'He / She is feeding the pigs.', ans:'He is feeding the pigs. / She is feeding the pigs.'},
-  {emo:'🐄', action:'watching the cows',  pattern:'He / She is watching the cows.',ans:'He is watching the cows. / She is watching the cows.'},
-  {emo:'🐑', action:'counting the sheep', pattern:'He / She is counting the sheep.',ans:'He is counting the sheep. / She is counting the sheep.'},
-  {emo:'🦆', action:'chasing the ducks',  pattern:'He / She is chasing the ducks.',ans:'He is chasing the ducks. / She is chasing the ducks.'},
-  {emo:'🐕', action:'walking the dog',    pattern:'He / She is walking the dog.',  ans:'He is walking the dog. / She is walking the dog.'},
-  {emo:'🏃', action:'running in the field',pattern:'He / She is running.',         ans:'He is running. / She is running.'}
+  {emo:'🐴', action:'riding a horse',      pattern:'What is he / she doing?', ans:'He is riding a horse. / She is riding a horse.'},
+  {emo:'🐔', action:'feeding the chickens', pattern:'What is he / she doing?', ans:'He is feeding the chickens. / She is feeding the chickens.'},
+  {emo:'🐷', action:'feeding the pigs',     pattern:'What is he / she doing?', ans:'He is feeding the pigs. / She is feeding the pigs.'},
+  {emo:'🐄', action:'watching the cows',    pattern:'What is he / she doing?', ans:'He is watching the cows. / She is watching the cows.'},
+  {emo:'🐑', action:'counting the sheep',   pattern:'What is he / she doing?', ans:'He is counting the sheep. / She is counting the sheep.'},
+  {emo:'🦆', action:'chasing the ducks',    pattern:'What is he / she doing?', ans:'He is chasing the ducks. / She is chasing the ducks.'},
+  {emo:'🐕', action:'walking the dog',      pattern:'What is he / she doing?', ans:'He is walking the dog. / She is walking the dog.'},
+  {emo:'🏃', action:'running in the field', pattern:'What is he / she doing?', ans:'He is running. / She is running.'}
 ];
 var g3arr=[], g3i=0;
 
